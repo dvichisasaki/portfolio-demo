@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YUKI TANAKA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f5f0eb;
+    --warm-white: #faf8f5;
+    --text: #1a1a18;
+    --muted: #8a8680;
+    --border: #ddd9d3;
+    --accent: #2a2a27;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--warm-white);
+    color: var(--text);
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 14px;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 8px; height: 8px;
+    background: var(--text);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+    transform: translate(-50%, -50%);
+  }
+
+  .cursor-ring {
+    width: 32px; height: 32px;
+    border: 1px solid rgba(26,26,24,0.4);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.4s ease, width 0.3s ease, height 0.3s ease;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    padding: 22px 40px;
+    background: rgba(250,248,245,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s;
+  }
+
+  nav.scrolled { border-color: var(--border); }
+
+  .nav-left {
+    display: flex;
+    gap: 32px;
+    flex: 1;
+  }
+
+  .nav-logo {
+    flex: 1;
+    text-align: center;
+    letter-spacing: 6px;
+    font-size: 13px;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    text-transform: uppercase;
+  }
+
+  .nav-right {
+    display: flex;
+    gap: 28px;
+    flex: 1;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  nav a {
+    text-decoration: none;
+    color: var(--text);
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    position: relative;
+  }
+
+  nav a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; left: 0; right: 0;
+    height: 1px;
+    background: var(--text);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+    transform-origin: left;
+  }
+
+  nav a:hover::after { transform: scaleX(1); }
+
+  .cart-link {
+    font-size: 13px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── PAGES ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── HOME HERO ── */
+  .hero {
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: brightness(0.88);
+    transform: scale(1.04);
+    animation: heroZoom 8s ease forwards;
+  }
+
+  @keyframes heroZoom {
+    to { transform: scale(1); }
+  }
+
+  .hero-btns {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 16px;
+    opacity: 0;
+    animation: fadeUp 1s 0.8s ease forwards;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translate(-50%, calc(-50% + 20px)); }
+    to { opacity: 1; transform: translate(-50%, -50%); }
+  }
+
+  .hero-btn {
+    padding: 14px 40px;
+    border: 1px solid rgba(250,248,245,0.85);
+    color: var(--warm-white);
+    background: transparent;
+    letter-spacing: 3px;
+    font-size: 11px;
+    font-family: 'Cormorant Garamond', serif;
+    text-transform: uppercase;
+    cursor: none;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .hero-btn:hover {
+    background: rgba(250,248,245,0.15);
+  }
+
+  /* ── PORTFOLIO GRID ── */
+  .section-header {
+    padding: 60px 40px 32px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    margin-top: 1px;
+  }
+
+  .grid-item {
+    background: var(--warm-white);
+    cursor: none;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .grid-item img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s ease;
+  }
+
+  .grid-item:hover img { transform: scale(1.03); }
+
+  .grid-caption {
+    padding: 16px 20px 22px;
+  }
+
+  .grid-caption .place {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .grid-caption .shop-link {
+    font-size: 13px;
+    font-style: italic;
+    color: var(--text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: none;
+  }
+
+  /* ── PRINTS GRID ── */
+  .prints-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--border);
+    margin-top: 1px;
+  }
+
+  .print-item {
+    background: var(--warm-white);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 480px;
+    cursor: none;
+    transition: background 0.2s;
+  }
+
+  .print-item:hover { background: var(--cream); }
+
+  .print-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .print-info {
+    padding: 40px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .print-place {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .print-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 300;
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+
+  .print-shop {
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    color: var(--muted);
+    cursor: none;
+  }
+
+  /* ── PRODUCT PAGE ── */
+  .product-layout {
+    display: grid;
+    grid-template-columns: 55% 1fr;
+    min-height: calc(100vh - 65px);
+    margin-top: 65px;
+  }
+
+  .product-img-wrap {
+    position: relative;
+    overflow: hidden;
+    background: var(--cream);
+  }
+
+  .product-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .product-details {
+    padding: 60px 48px;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid var(--border);
+  }
+
+  .product-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 300;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .product-price {
+    font-size: 18px;
+    color: var(--text);
+    margin-bottom: 36px;
+    font-style: italic;
+  }
+
+  .size-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  .size-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    margin-bottom: 32px;
+    border: 1px solid var(--border);
+  }
+
+  .size-option {
+    padding: 13px 18px;
+    font-size: 13px;
+    background: var(--warm-white);
+    border: none;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    cursor: none;
+    transition: background 0.2s;
+    font-family: 'EB Garamond', serif;
+    color: var(--text);
+  }
+
+  .size-option:last-child { border-bottom: none; }
+  .size-option:hover, .size-option.selected { background: var(--cream); }
+  .size-option.selected::before { content: '✓  '; }
+
+  .add-to-cart {
+    width: 100%;
+    padding: 17px;
+    background: var(--text);
+    color: var(--warm-white);
+    border: none;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: none;
+    transition: background 0.3s;
+    margin-bottom: 32px;
+  }
+
+  .add-to-cart:hover { background: #3a3a36; }
+
+  .product-desc {
+    font-size: 13px;
+    line-height: 1.9;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    padding-top: 28px;
+  }
+
+  .product-desc p { margin-bottom: 14px; }
+
+  /* ── BACK BUTTON ── */
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 20px 40px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    cursor: none;
+    border-bottom: 1px solid var(--border);
+    width: 100%;
+  }
+
+  .back-btn:hover { color: var(--text); }
+
+  /* ── CART NOTIFICATION ── */
+  .cart-toast {
+    position: fixed;
+    bottom: 32px; right: 32px;
+    background: var(--text);
+    color: var(--warm-white);
+    padding: 14px 24px;
+    font-size: 13px;
+    letter-spacing: 1px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  .cart-toast.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 48px 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: start;
+    gap: 40px;
+    background: var(--warm-white);
+  }
+
+  .footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .footer-links a {
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    cursor: none;
+  }
+
+  .footer-links a:hover { color: var(--text); }
+
+  .footer-logo {
+    text-align: center;
+    letter-spacing: 5px;
+    font-size: 12px;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .footer-newsletter p {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .newsletter-form {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .newsletter-form input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    font-family: 'EB Garamond', serif;
+    font-size: 13px;
+    color: var(--text);
+    padding: 8px 0;
+  }
+
+  .newsletter-form button {
+    background: none;
+    border: none;
+    font-family: 'EB Garamond', serif;
+    font-size: 13px;
+    color: var(--muted);
+    cursor: none;
+    padding: 8px 0 8px 12px;
+  }
+
+  .newsletter-form button:hover { color: var(--text); }
+
+  /* Page fade-in */
+  .page.active { animation: pageFade 0.4s ease; }
+  @keyframes pageFade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-left">
+    <a href="#" onclick="showPage('prints')">Prints</a>
+    <a href="#" onclick="showPage('portfolio')">Portfolio</a>
+    <a href="#" onclick="showPage('about')">About</a>
+  </div>
+  <div class="nav-logo">Y U K I &nbsp; T A N A K A</div>
+  <div class="nav-right">
+    <a href="#" class="cart-link">Log in</a>
+    <a href="#" class="cart-link" id="cartCount">Cart (0)</a>
+  </div>
+</nav>
+
+<!-- CART TOAST -->
+<div class="cart-toast" id="cartToast">Added to cart</div>
+
+<!-- ══ HOME PAGE ══ -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <img class="hero-img"
+      src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1800&q=80"
+      alt="hero">
+    <div class="hero-btns">
+      <button class="hero-btn" onclick="showPage('prints')">PRINTS</button>
+      <button class="hero-btn" onclick="showPage('portfolio')">PORTFOLIO</button>
+    </div>
+  </div>
+  <footer>
+    <div class="footer-links">
+      <a href="#" onclick="showPage('prints')">Shop</a>
+      <a href="#">Contact</a>
+      <a href="#">FAQ</a>
+    </div>
+    <div class="footer-logo">Y U K I &nbsp; T A N A K A</div>
+    <div class="footer-newsletter">
+      <p>Notes from places: join the newsletter</p>
+      <div class="newsletter-form">
+        <input type="email" placeholder="Email Address">
+        <button>Join</button>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ══ PORTFOLIO PAGE ══ -->
+<div class="page" id="page-portfolio" style="padding-top:65px;">
+  <div class="section-header">Portfolio</div>
+  <div class="grid">
+    <div class="grid-item" onclick="showProduct('hokkaido')">
+      <img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=600&q=80" alt="Hokkaido">
+      <div class="grid-caption">
+        <div class="place">PLACE: Hokkaido, Japan</div>
+        <span class="shop-link">shop this print</span>
+      </div>
+    </div>
+    <div class="grid-item" onclick="showProduct('kyoto')">
+      <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600&q=80" alt="Kyoto">
+      <div class="grid-caption">
+        <div class="place">PLACE: Kyoto, Japan</div>
+        <span class="shop-link">shop this print</span>
+      </div>
+    </div>
+    <div class="grid-item" onclick="showProduct('okinawa')">
+      <img src="https://images.unsplash.com/photo-1570459027562-4a916cc6113f?w=600&q=80" alt="Okinawa">
+      <div class="grid-caption">
+        <div class="place">PLACE: Okinawa, Japan</div>
+        <span class="shop-link">shop this print</span>
+      </div>
+    </div>
+    <div class="grid-item">
+      <img src="https://images.unsplash.com/photo-1445307806294-bff7f67ff225?w=600&q=80" alt="Tokyo">
+      <div class="grid-caption">
+        <div class="place">PLACE: Tokyo, Japan</div>
+        <span class="shop-link">shop this print</span>
+      </div>
+    </div>
+    <div class="grid-item">
+      <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&q=80" alt="Osaka">
+      <div class="grid-caption">
+        <div class="place">PLACE: Osaka, Japan</div>
+        <span class="shop-link">shop this print</span>
+      </div>
+    </div>
+    <div class="grid-item">
+      <img src="https://images.unsplash.com/photo-1480796927426-f609979314bd?w=600&q=80" alt="Nara">
+      <div class="grid-caption">
+        <div class="place">PLACE: Nara, Japan</div>
+        <span class="shop-link">shop this print</span>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <div class="footer-links">
+      <a href="#" onclick="showPage('prints')">Shop</a>
+      <a href="#">Contact</a>
+      <a href="#">FAQ</a>
+    </div>
+    <div class="footer-logo">Y U K I &nbsp; T A N A K A</div>
+    <div class="footer-newsletter">
+      <p>Notes from places: join the newsletter</p>
+      <div class="newsletter-form">
+        <input type="email" placeholder="Email Address">
+        <button>Join</button>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ══ PRINTS PAGE ══ -->
+<div class="page" id="page-prints" style="padding-top:65px;">
+  <div class="section-header">Prints</div>
+  <div class="prints-grid">
+    <div class="print-item" onclick="showProduct('hokkaido')">
+      <img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=600&q=80" alt="Hokkaido">
+      <div class="print-info">
+        <div class="print-place">PLACE: Hokkaido, Japan</div>
+        <div class="print-title">Winter Light,<br>Biei</div>
+        <span class="print-shop">shop this print</span>
+      </div>
+    </div>
+    <div class="print-item" onclick="showProduct('kyoto')">
+      <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600&q=80" alt="Kyoto">
+      <div class="print-info">
+        <div class="print-place">PLACE: Kyoto, Japan</div>
+        <div class="print-title">Morning Fog,<br>Arashiyama</div>
+        <span class="print-shop">shop this print</span>
+      </div>
+    </div>
+    <div class="print-item" onclick="showProduct('okinawa')">
+      <img src="https://images.unsplash.com/photo-1570459027562-4a916cc6113f?w=600&q=80" alt="Okinawa">
+      <div class="print-info">
+        <div class="print-place">PLACE: Okinawa, Japan</div>
+        <div class="print-title">Blue Hour,<br>Kerama</div>
+        <span class="print-shop">shop this print</span>
+      </div>
+    </div>
+    <div class="print-item">
+      <img src="https://images.unsplash.com/photo-1445307806294-bff7f67ff225?w=600&q=80" alt="Tokyo">
+      <div class="print-info">
+        <div class="print-place">PLACE: Tokyo, Japan</div>
+        <div class="print-title">City Rain,<br>Shinjuku</div>
+        <span class="print-shop">shop this print</span>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <div class="footer-links">
+      <a href="#" onclick="showPage('prints')">Shop</a>
+      <a href="#">Contact</a>
+      <a href="#">FAQ</a>
+    </div>
+    <div class="footer-logo">Y U K I &nbsp; T A N A K A</div>
+    <div class="footer-newsletter">
+      <p>Notes from places: join the newsletter</p>
+      <div class="newsletter-form">
+        <input type="email" placeholder="Email Address">
+        <button>Join</button>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ══ PRODUCT PAGES ══ -->
+<div class="page" id="page-product">
+  <div style="padding-top:65px;">
+    <div class="back-btn" onclick="showPage('prints')">← Back to Prints</div>
+    <div class="product-layout">
+      <div class="product-img-wrap">
+        <img id="product-img" src="" alt="">
+      </div>
+      <div class="product-details">
+        <div class="product-title" id="product-title"></div>
+        <div class="product-price" id="product-price"></div>
+        <div class="size-label">Size</div>
+        <div class="size-options" id="size-options"></div>
+        <button class="add-to-cart" onclick="addToCart()">Add to Cart</button>
+        <div class="product-desc" id="product-desc"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ABOUT PAGE ══ -->
+<div class="page" id="page-about" style="padding-top:65px;">
+  <div style="display:grid; grid-template-columns:1fr 1fr; min-height:calc(100vh - 65px);">
+    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80"
+      style="width:100%;height:100%;object-fit:cover;" alt="About">
+    <div style="padding:80px 60px; display:flex; flex-direction:column; justify-content:center;">
+      <p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:24px;">About</p>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;margin-bottom:28px;line-height:1.3;">Yuki Tanaka</h2>
+      <p style="font-size:14px;line-height:2;color:var(--muted);margin-bottom:20px;">
+        Film photographer based in Tokyo, Japan. My work explores the quiet moments between movement — the light that lingers after the crowd has gone, the textures that speak louder than noise.
+      </p>
+      <p style="font-size:14px;line-height:2;color:var(--muted);margin-bottom:20px;">
+        Each print is made to order on heavyweight museum-grade paper using archival pigment inks, and ships from my studio in Tokyo within 5–7 business days.
+      </p>
+      <p style="font-size:14px;line-height:2;color:var(--muted);">
+        For commissions and inquiries: <span style="text-decoration:underline;text-underline-offset:3px;">hello@yukitanaka.com</span>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+
+  function animRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) *.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+
+  // Navbar scroll
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  // Products data
+  const products = {
+    hokkaido: {
+      title: 'Winter Light, Biei',
+      price: '¥24,800',
+      img: 'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=900&q=80',
+      sizes: ['25cm × 36cm, 10.0" × 14.0"', '46cm × 66cm, 18.0" × 26.0"', '66cm × 97cm, 26.0" × 38.0"', '86cm × 127cm, 34.0" × 50.0"'],
+      desc: `<p>Winter Light, Biei is part of <em>Silence of Snow</em>, a limited-edition collection of film photographs from Hokkaido's rural heartland.</p><p>Each photograph is printed on heavyweight, environmentally-friendly museum-grade paper with archival pigment inks and a one-inch border. Works come with a certificate of authenticity.</p><p>Prints are custom made to order and dispatched from my studio in Tokyo within 5–7 business days.</p>`
+    },
+    kyoto: {
+      title: 'Morning Fog, Arashiyama',
+      price: '¥28,500',
+      img: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=900&q=80',
+      sizes: ['25cm × 36cm, 10.0" × 14.0"', '46cm × 66cm, 18.0" × 26.0"', '66cm × 97cm, 26.0" × 38.0"', '86cm × 127cm, 34.0" × 50.0"'],
+      desc: `<p>Morning Fog, Arashiyama captures the bamboo grove just before the tourists arrive — a stillness that only film can hold.</p><p>Each photograph is printed on heavyweight museum-grade paper with archival pigment inks and a one-inch border. Comes with a certificate of authenticity.</p><p>Prints are custom made to order and dispatched from Tokyo within 5–7 business days.</p>`
+    },
+    okinawa: {
+      title: 'Blue Hour, Kerama',
+      price: '¥22,400',
+      img: 'https://images.unsplash.com/photo-1570459027562-4a916cc6113f?w=900&q=80',
+      sizes: ['25cm × 36cm, 10.0" × 14.0"', '46cm × 66cm, 18.0" × 26.0"', '66cm × 97cm, 26.0" × 38.0"', '86cm × 127cm, 34.0" × 50.0"'],
+      desc: `<p>Blue Hour, Kerama — shot at dusk on the Kerama islands, where the ocean turns the colour of deep memory.</p><p>Printed on heavyweight museum-grade paper with archival pigment inks. Comes with a certificate of authenticity.</p><p>Custom printed to order, dispatched from Tokyo within 5–7 business days.</p>`
+    }
+  };
+
+  let cartCount = 0;
+  let selectedSize = 0;
+
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function showProduct(id) {
+    const p = products[id];
+    if (!p) return;
+    document.getElementById('product-img').src = p.img;
+    document.getElementById('product-title').textContent = p.title;
+    document.getElementById('product-price').textContent = p.price;
+    document.getElementById('product-desc').innerHTML = p.desc;
+
+    const opts = document.getElementById('size-options');
+    opts.innerHTML = '';
+    p.sizes.forEach((s, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'size-option' + (i === 0 ? ' selected' : '');
+      btn.textContent = s;
+      btn.onclick = () => {
+        document.querySelectorAll('.size-option').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedSize = i;
+      };
+      opts.appendChild(btn);
+    });
+
+    showPage('product');
+  }
+
+  function addToCart() {
+    cartCount++;
+    document.getElementById('cartCount').textContent = `Cart (${cartCount})`;
+    const toast = document.getElementById('cartToast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2200);
+  }
+</script>
+</body>
+</html>
